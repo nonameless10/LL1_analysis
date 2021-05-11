@@ -2,7 +2,7 @@
 Author       : czq
 Date         : 2021-05-10 19:27:30
 LastEditors  : czq
-LastEditTime : 2021-05-11 13:09:45
+LastEditTime : 2021-05-11 14:44:51
 '''
 
 from prettytable import PrettyTable
@@ -159,7 +159,7 @@ def analysis(s: str) -> PrettyTable():
 # 打印输出
 def printf() -> None:
     global non_term, term, First, Follow, AnalysisList, isLL1
-    print("文法如下：")
+    print("输入的文法如下：")
     for it in Gram: print(' ', it)
     print("非终结符：", end='')
     print(non_term)
