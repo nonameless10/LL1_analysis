@@ -2,7 +2,7 @@
 Author       : czq
 Date         : 2021-05-10 19:27:30
 LastEditors  : czq
-LastEditTime : 2021-05-11 14:44:51
+LastEditTime : 2021-05-11 15:59:45
 '''
 
 from prettytable import PrettyTable
@@ -87,20 +87,30 @@ def getAnalysisList() -> bool:
     for i in production:
         r = production[i]
         for s in r:
-            if epsilon not in First[s[0]]: # s[0] 不能推出 ε
-                for j in First[s[0]]: 
-                    if AnalysisList[i][j] != None: 
-                        res =  False
-                        AnalysisList[i][j] += ', ->' + s
-                    else:
-                        AnalysisList[i][j] = s
-            else:
-                for j in (First[s[0]] - set(epsilon)) | Follow[i]:
-                    if AnalysisList[i][j] != None: 
+            mark = False
+            for si in s:
+                if epsilon not in First[si]: # 不能推出空
+                    for j in First[si]:
+                        if AnalysisList[i][j] != None:
+                            AnalysisList[i][j] += ', ->' + s
+                            res = False
+                        else: AnalysisList[i][j] = s
+                    mark = False
+                    break
+                else:
+                    mark = True
+                    for j in First[si] - set(epsilon):
+                        if AnalysisList[i][j] != None:
+                            res = False
+                            AnalysisList[i][j] += ', ->' + s
+                        else: AnalysisList[i][j] = s
+            if mark: #First[s] 可以推出空
+                for j in Follow[i]:
+                    if AnalysisList[i][j] != None:
                         res = False
                         AnalysisList[i][j] += ', ->' + s
-                    else:
-                        AnalysisList[i][j] = s
+                    else: AnalysisList[i][j] = s
+                
     return res
 
 # 分析符号串
@@ -154,7 +164,6 @@ def analysis(s: str) -> PrettyTable():
     row.append('失败')
     res.add_row(row)
     return res
-
 
 # 打印输出
 def printf() -> None:
